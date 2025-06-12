@@ -54,38 +54,48 @@
           id="patternSection"
           style="display: none"
         >
-          <!-- コントロールバー -->
-          <div class="control-bar">
-            <!-- プログレス情報（プログレスバーとページ数を統合） -->
-            <div class="progress-info-container">
-              <div class="progress-header">
-                <div class="pattern-info">
-                  <span id="currentIndex">1</span> /
-                  <span id="totalBlocks">1</span>
-                </div>
-                <div class="progress-percentage" id="progressPercentage">
-                  0%
-                </div>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-              </div>
-            </div>
-            <button class="reset-btn" id="resetBtn">🔄 リセット</button>
-          </div>
-
           <!-- パターンブロック表示 -->
           <div class="pattern-display">
-            <div class="pattern-block" id="patternBlock">
-              <!-- パターンの内容がここに表示される -->
+            <!-- 新しいヘッダー -->
+            <div class="pattern-header">
+              <div class="progress-info-container">
+                <div class="progress-header">
+                  <div class="pattern-info">
+                    <span id="currentIndex">1</span> /
+                    <span id="totalBlocks">1</span>
+                  </div>
+                  <div class="progress-percentage" id="progressPercentage">
+                    0%
+                  </div>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" id="progressFill"></div>
+                </div>
+              </div>
+              <div class="pattern-actions">
+                <button class="reset-btn" id="resetBtn" title="最初に戻る">
+                  <i class="fas fa-undo"></i>
+                </button>
+                <button
+                  class="copy-btn"
+                  id="copyBtn"
+                  title="クリップボードにコピー"
+                >
+                  <i class="fas fa-copy"></i>
+                </button>
+              </div>
             </div>
-            <button
-              class="copy-btn"
-              id="copyBtn"
-              title="クリップボードにコピー"
-            >
-              <i class="fas fa-copy"></i>
-            </button>
+
+            <div class="pattern-block" id="patternBlock">
+              <!-- 英語パターン -->
+              <div class="english-pattern" id="englishPattern">
+                <!-- 英語のパターンの内容がここに表示される -->
+              </div>
+              <!-- 日本語対訳 -->
+              <div class="japanese-pattern" id="japanesePattern">
+                <!-- 日本語のパターンの内容がここに表示される -->
+              </div>
+            </div>
           </div>
 
           <!-- ナビゲーションボタン -->

@@ -146,336 +146,276 @@ body {
   max-width: 100%;
 }
 
-/* コントロールバー */
-.control-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.98);
-  border-radius: 16px;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  gap: 1.5rem;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-/* プログレス情報コンテナ（プログレスバーとページ数を統合） */
-.progress-info-container {
-  flex: 1;
-  max-width: 450px;
-  background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
-  border-radius: 12px;
-  padding: 1rem;
-  border: 1px solid rgba(226, 232, 240, 0.6);
-  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
-}
-
-.progress-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
-}
-
-.pattern-info {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #2d3748;
-  letter-spacing: -0.025em;
-}
-
-.progress-percentage {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #667eea;
-  background: rgba(102, 126, 234, 0.1);
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  border: 1px solid rgba(102, 126, 234, 0.2);
-}
-
-.progress-bar {
-  height: 8px;
-  background: #e2e8f0;
-  border-radius: 4px;
-  overflow: hidden;
-  position: relative;
-  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #48bb78 0%, #38a169 100%);
-  border-radius: 4px;
-  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  width: 0%;
-  box-shadow: 0 0 10px rgba(72, 187, 120, 0.3);
-}
-
-.reset-btn {
-  background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(245, 101, 101, 0.25);
-  letter-spacing: -0.025em;
-}
-
-.reset-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(245, 101, 101, 0.35);
-}
-
 /* パターン表示 */
 .pattern-display {
   position: relative;
   background: rgba(255, 255, 255, 0.98);
   border-radius: 20px;
-  padding: 2.5rem;
   margin-bottom: 2rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
   min-height: 350px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .pattern-display:hover {
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  transform: translateY(-2px);
 }
 
-.pattern-block {
-  font-size: 1.25rem;
-  line-height: 1.8;
+/* 新しいヘッダー */
+.pattern-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 0.75rem;
+  background-color: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  flex-shrink: 0;
+}
+
+.progress-info-container {
+  flex: 1;
+  max-width: 100%;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.3rem;
+}
+
+.pattern-info {
+  font-size: 0.95rem;
+  font-weight: 600;
   color: #2d3748;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  font-family: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", "Fira Code",
-    monospace;
-  font-weight: 500;
-  letter-spacing: 0.025em;
+  letter-spacing: -0.025em;
 }
 
-/* コピーボタン */
+.progress-percentage {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #5a67d8;
+  background: rgba(90, 103, 216, 0.08);
+  padding: 0.15rem 0.5rem;
+  border-radius: 16px;
+  border: 1px solid rgba(90, 103, 216, 0.15);
+}
+
+.progress-bar {
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #5a67d8 0%, #805ad5 100%);
+  border-radius: 2px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 0%;
+}
+
+.pattern-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.reset-btn,
 .copy-btn {
-  position: absolute;
-  bottom: 1rem;
-  right: 1rem;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(102, 126, 234, 0.3);
-  border-radius: 8px;
-  padding: 0.75rem;
-  font-size: 1rem;
+  background: transparent;
+  color: #a0aec0;
+  border: none;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
   cursor: pointer;
-  opacity: 0.6;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-size: 1rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  z-index: 10;
 }
 
+.reset-btn:hover,
 .copy-btn:hover {
-  opacity: 1;
-  background: rgba(102, 126, 234, 0.15);
-  border-color: rgba(102, 126, 234, 0.5);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.25);
-  color: #667eea;
+  background: #edf2f7;
+  color: #4a5568;
 }
 
+.reset-btn:active,
 .copy-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(1px);
 }
 
 .copy-btn.copied {
-  background: rgba(16, 185, 129, 0.15);
-  border-color: rgba(16, 185, 129, 0.5);
-  opacity: 1;
-  color: #10b981;
+  background: #5a67d8;
+  color: white;
+}
+
+.pattern-block {
+  padding: 2.2rem 2.5rem 2.2rem 2.5rem;
+  flex-grow: 1;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #2d3748;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: none;
+}
+
+.pattern-block.has-translation {
+  display: block;
+}
+
+.english-pattern {
+  margin-bottom: 1.2rem;
+  padding: 0;
+  line-height: 1.8;
+  color: #4a5568;
+  font-family: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", "Fira Code",
+    monospace;
+  letter-spacing: 0.025em;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.japanese-pattern {
+  margin-top: 1.2rem;
+  padding: 0;
+  border-top: 1px solid #e2e8f0;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #2d3748;
+  font-weight: 500;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 /* ナビゲーション */
 .navigation {
   display: flex;
+  justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 2rem;
 }
 
 .nav-btn {
   flex: 1;
-  padding: 1.25rem;
-  font-size: 1.125rem;
+  background: #fff;
+  color: #4a5568;
+  border: 1px solid #e2e8f0;
+  padding: 1rem;
+  font-size: 1rem;
   font-weight: 600;
-  border: none;
-  border-radius: 16px;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  letter-spacing: -0.025em;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  text-align: center;
+}
+
+.prev-btn:not(:disabled):hover,
+.next-btn:not(:disabled):hover {
+  border-color: #cbd5e0;
+  background-color: #f7fafc;
+  transform: translateY(-2px);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-.prev-btn {
-  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-  color: #4a5568;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.prev-btn:not(:disabled):hover {
-  background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
 .next-btn {
-  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  box-shadow: 0 4px 15px rgba(72, 187, 120, 0.25);
-}
-
-.next-btn:not(:disabled):hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(72, 187, 120, 0.35);
+  border: none;
 }
 
 .nav-btn:disabled {
-  opacity: 0.4;
+  background-color: #f7fafc;
+  color: #a0aec0;
   cursor: not-allowed;
-  transform: none !important;
+  box-shadow: none;
 }
 
 .nav-btn:active {
   transform: translateY(0);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
-/* 新しいファイルセクション */
+/* 新しいファイルアップロードボタン */
 .new-file-section {
   text-align: center;
-  padding-top: 2rem;
-  border-top: 1px solid rgba(226, 232, 240, 0.6);
+  margin-top: 1.2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid #e2e8f0;
 }
 
 .secondary-btn {
-  background: rgba(255, 255, 255, 0.8);
-  color: #667eea;
-  border: 2px solid rgba(102, 126, 234, 0.3);
-  padding: 1rem 2rem;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 0.95rem;
+  background-color: #f7fafc;
+  color: #4a5568;
+  border: 1px solid #cbd5e0;
+  padding: 0.5rem 1.1rem;
+  font-size: 0.92rem;
   font-weight: 600;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  letter-spacing: -0.025em;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.18s;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  letter-spacing: 0.01em;
 }
 
 .secondary-btn:hover {
-  background: #667eea;
-  color: white;
-  border-color: #667eea;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.25);
+  background-color: #e9edfa;
+  border-color: #a0aec0;
+  color: #2d3748;
 }
 
-/* レスポンシブ対応 */
+/* メディアクエリ */
 @media (max-width: 768px) {
   .header {
-    padding: 2rem 1rem 1.5rem;
+    padding: 2rem 1rem;
   }
-
   .header h1 {
     font-size: 2rem;
   }
-
   .main-content {
     padding: 1.5rem 1rem;
   }
-
   .upload-area {
     padding: 3rem 1.5rem;
-    border-radius: 12px;
   }
-
   .upload-btn {
     padding: 1rem 2rem;
     font-size: 1rem;
   }
-
   .pattern-display {
-    padding: 2rem 1.5rem;
     border-radius: 16px;
-    min-height: 300px;
   }
-
+  .pattern-header {
+    padding: 0.2rem 0.4rem;
+  }
   .pattern-block {
-    font-size: 1.125rem;
-    line-height: 1.7;
+    padding: 1.2rem 0.7rem 1.2rem 0.7rem;
+    font-size: 0.97rem;
   }
-
-  .copy-btn {
-    bottom: 0.75rem;
-    right: 0.75rem;
-    width: 36px;
-    height: 36px;
-    font-size: 0.9rem;
-    padding: 0.5rem;
+  .english-pattern,
+  .japanese-pattern {
+    font-size: 0.97rem;
+    padding: 0.15rem 0.05rem 0.15rem 0.05rem;
   }
-
-  .control-bar {
-    flex-direction: column;
-    gap: 1.5rem;
-    text-align: center;
-    padding: 1.25rem;
-  }
-
-  .progress-info-container {
-    max-width: none;
-    width: 100%;
-    order: -1; /* プログレス情報を一番上に配置 */
-  }
-
-  .progress-bar {
-    height: 10px; /* モバイルでは少し太く */
-  }
-
-  .pattern-info {
-    font-size: 1.125rem;
-  }
-
-  .progress-percentage {
-    font-size: 0.9rem;
-    padding: 0.2rem 0.6rem;
-  }
-
   .navigation {
     flex-direction: column;
-    gap: 1rem;
   }
-
   .nav-btn {
-    padding: 1.125rem;
-    font-size: 1.05rem;
-    border-radius: 12px;
-  }
-
-  .reset-btn {
-    padding: 0.75rem 1.25rem;
-    font-size: 0.85rem;
+    padding: 0.875rem;
   }
 }
 
@@ -483,45 +423,43 @@ body {
   .header h1 {
     font-size: 1.75rem;
   }
-
   .header p {
     font-size: 0.9rem;
   }
-
-  .pattern-block {
-    font-size: 1rem;
-    line-height: 1.6;
-  }
-
-  .upload-btn {
-    padding: 0.875rem 1.75rem;
-    font-size: 0.95rem;
-  }
-
-  .upload-area {
-    padding: 2.5rem 1rem;
-  }
-
-  .pattern-display {
-    padding: 1.75rem 1.25rem;
-  }
-
-  .copy-btn {
-    bottom: 0.5rem;
-    right: 0.5rem;
-    width: 32px;
-    height: 32px;
-    font-size: 0.8rem;
+  .pattern-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
     padding: 0.4rem;
   }
-
-  .control-bar {
-    padding: 1rem;
-    gap: 1.25rem;
+  .pattern-actions {
+    justify-content: space-between;
   }
+  .pattern-block {
+    padding: 0.7rem 0.2rem 0.7rem 0.2rem;
+  }
+  .english-pattern,
+  .japanese-pattern {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    padding: 0.1rem 0.01rem 0.1rem 0.01rem;
+  }
+  .upload-btn {
+    width: 100%;
+  }
+  .upload-area {
+    padding: 2rem 1rem;
+  }
+}
 
-  .nav-btn {
-    padding: 1rem;
-    font-size: 1rem;
+@media (max-width: 900px) {
+  .pattern-block {
+    padding: 1.2rem 1.2rem 1.2rem 1.2rem;
+  }
+}
+@media (max-width: 600px) {
+  .pattern-block {
+    padding: 0.7rem 1.1rem 0.7rem 1.1rem;
+    max-width: 100vw;
   }
 }
