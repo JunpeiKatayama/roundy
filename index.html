@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roundy - 編み図リーダー</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- Font Awesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- PDF.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- ヘッダー -->
+      <header class="header">
+        <h1>🧶 Roundy</h1>
+        <p>編み図PDFをアップロードして、ラウンドごとに表示</p>
+      </header>
+
+      <!-- メインコンテンツ -->
+      <main class="main-content">
+        <!-- PDFアップロードセクション -->
+        <section class="upload-section" id="uploadSection">
+          <div class="upload-area">
+            <input
+              type="file"
+              id="pdfInput"
+              accept=".pdf"
+              style="display: none"
+            />
+            <button
+              class="upload-btn"
+              onclick="document.getElementById('pdfInput').click()"
+            >
+              📄 PDFファイルを選択
+            </button>
+            <p class="upload-info">
+              アメリカ式編み図のPDFファイルをアップロードしてください
+            </p>
+          </div>
+          <div class="loading" id="loading" style="display: none">
+            <div class="spinner"></div>
+            <p>PDFを解析中...</p>
+          </div>
+        </section>
+
+        <!-- パターン表示セクション -->
+        <section
+          class="pattern-section"
+          id="patternSection"
+          style="display: none"
+        >
+          <!-- コントロールバー -->
+          <div class="control-bar">
+            <!-- プログレス情報（プログレスバーとページ数を統合） -->
+            <div class="progress-info-container">
+              <div class="progress-header">
+                <div class="pattern-info">
+                  <span id="currentIndex">1</span> /
+                  <span id="totalBlocks">1</span>
+                </div>
+                <div class="progress-percentage" id="progressPercentage">
+                  0%
+                </div>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+              </div>
+            </div>
+            <button class="reset-btn" id="resetBtn">🔄 リセット</button>
+          </div>
+
+          <!-- パターンブロック表示 -->
+          <div class="pattern-display">
+            <div class="pattern-block" id="patternBlock">
+              <!-- パターンの内容がここに表示される -->
+            </div>
+            <button
+              class="copy-btn"
+              id="copyBtn"
+              title="クリップボードにコピー"
+            >
+              <i class="fas fa-copy"></i>
+            </button>
+          </div>
+
+          <!-- ナビゲーションボタン -->
+          <div class="navigation">
+            <button class="nav-btn prev-btn" id="prevBtn" disabled>
+              ← 前へ
+            </button>
+            <button class="nav-btn next-btn" id="nextBtn">次へ →</button>
+          </div>
+
+          <!-- 新しいファイルをアップロードするボタン -->
+          <div class="new-file-section">
+            <button class="secondary-btn" onclick="resetApp()">
+              📄 新しいPDFをアップロード
+            </button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
