@@ -68,16 +68,16 @@ const STITCH_TRANSLATIONS = {
   "purl through back loop": "裏目のねじり編み",
 
   // 棒針の減らし目
-  k2tog: "右上2目一度",
-  "knit 2 together": "右上2目一度",
-  p2tog: "裏目で2目一度",
-  "purl 2 together": "裏目で2目一度",
-  ssk: "左上2目一度",
-  "slip, slip, knit": "左上2目一度",
-  ssp: "裏側で左上2目一度",
-  "slip, slip, purl": "裏側で左上2目一度",
-  cdd: "中央の2目一度",
-  "centered double decrease": "中央の2目一度",
+  k2tog: "左上2目一度",
+  "knit 2 together": "左上2目一度",
+  p2tog: "裏目で左上2目一度",
+  "purl 2 together": "裏目で左上2目一度",
+  ssk: "右上2目一度",
+  "slip, slip, knit": "右上2目一度",
+  ssp: "裏側で右上2目一度",
+  "slip, slip, purl": "裏側で右上2目一度",
+  cdd: "中上3目一度",
+  "centered double decrease": "中上3目一度",
 
   // 棒針の増し目
   m1: "増し目",
