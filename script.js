@@ -3,6 +3,11 @@ let patternBlocks = [];
 let currentBlockIndex = 0;
 const STORAGE_KEY = "patternReaderState";
 
+// スリープ防止関連の変数
+let wakeLock = null;
+let noSleep = null;
+let isWakeLockActive = false;
+
 // 英語→日本語編み方対応表（かぎ針編み＋棒針編み）
 const STITCH_TRANSLATIONS = {
   // === かぎ針編み（Crochet） ===
@@ -340,6 +345,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // コピーボタンのイベントリスナー
   copyBtn.addEventListener("click", copyToClipboard);
+
+  // Wake Lockボタンのイベントリスナー
+  const wakeLockBtn = document.getElementById("wakeLockBtn");
+  wakeLockBtn.addEventListener("click", toggleWakeLock);
 });
 
 // PDFアップロード処理
@@ -742,16 +751,15 @@ async function copyToClipboard() {
 
 // コピー成功のフィードバック表示
 function showCopyFeedback() {
-  // ボタンのアイコンを一時的に変更
-  const iconElement = copyBtn.querySelector("i");
-  iconElement.className = "fas fa-check";
+  const copyBtn = document.getElementById("copyBtn");
+  const originalText = copyBtn.innerHTML;
+  copyBtn.innerHTML = '<i class="fas fa-check"></i>';
   copyBtn.classList.add("copied");
 
-  // 1.5秒後に元に戻す
   setTimeout(() => {
-    iconElement.className = "fas fa-copy";
+    copyBtn.innerHTML = originalText;
     copyBtn.classList.remove("copied");
-  }, 1500);
+  }, 2000);
 }
 
 // キーボードショートカット（オプション）
@@ -831,3 +839,107 @@ if ("serviceWorker" in navigator) {
     // サービスワーカーは今回は実装しないが、将来的に追加可能
   });
 }
+
+// === スリープ防止機能 ===
+
+// NoSleep.jsを初期化する関数
+function initNoSleep() {
+  if (typeof NoSleep !== "undefined" && !noSleep) {
+    noSleep = new NoSleep();
+  }
+}
+
+// スリープ防止を開始する関数
+async function requestWakeLock() {
+  try {
+    // NoSleep.jsを優先して使用（iOS対応）
+    if (typeof NoSleep !== "undefined") {
+      if (!noSleep) {
+        noSleep = new NoSleep();
+      }
+
+      await noSleep.enable();
+      isWakeLockActive = true;
+      updateWakeLockButton();
+      console.log("スリープ防止を開始しました（NoSleep.js）");
+      return;
+    }
+
+    // フォールバック: Wake Lock API（Android Chrome等）
+    if ("wakeLock" in navigator) {
+      wakeLock = await navigator.wakeLock.request("screen");
+      isWakeLockActive = true;
+      updateWakeLockButton();
+      console.log("スリープ防止を開始しました（Wake Lock API）");
+
+      // Wake Lockが解放された時のイベントリスナー
+      wakeLock.addEventListener("release", () => {
+        isWakeLockActive = false;
+        updateWakeLockButton();
+        console.log("スリープ防止が解除されました");
+      });
+    } else {
+      alert("このブラウザではスリープ防止機能がサポートされていません");
+    }
+  } catch (err) {
+    console.error("スリープ防止取得エラー:", err);
+    alert("スリープ防止機能の開始に失敗しました");
+  }
+}
+
+// スリープ防止を解放する関数
+async function releaseWakeLock() {
+  if (noSleep && isWakeLockActive) {
+    await noSleep.disable();
+    isWakeLockActive = false;
+    updateWakeLockButton();
+    console.log("スリープ防止を停止しました（NoSleep.js）");
+    return;
+  }
+
+  if (wakeLock) {
+    await wakeLock.release();
+    wakeLock = null;
+    isWakeLockActive = false;
+    updateWakeLockButton();
+    console.log("スリープ防止を停止しました（Wake Lock API）");
+  }
+}
+
+// Wake Lockボタンの表示を更新する関数
+function updateWakeLockButton() {
+  const wakeLockBtn = document.getElementById("wakeLockBtn");
+  if (isWakeLockActive) {
+    wakeLockBtn.classList.add("active");
+    wakeLockBtn.innerHTML = '<i class="fas fa-sun"></i>';
+    wakeLockBtn.title = "スリープ防止ON（クリックでOFF）";
+  } else {
+    wakeLockBtn.classList.remove("active");
+    wakeLockBtn.innerHTML = '<i class="fas fa-moon"></i>';
+    wakeLockBtn.title = "スリープ防止OFF（クリックでON）";
+  }
+}
+
+// Wake Lockボタンクリック時の処理
+async function toggleWakeLock() {
+  if (isWakeLockActive) {
+    await releaseWakeLock();
+  } else {
+    await requestWakeLock();
+  }
+}
+
+// ページの可視性が変わった時の処理（バックグラウンドからフォアグラウンドに戻った時）
+document.addEventListener("visibilitychange", async () => {
+  if (document.visibilityState === "visible") {
+    // ページが再表示された時、Wake Lockが自動解放されるので再取得
+    if (isWakeLockActive && wakeLock !== null) {
+      await requestWakeLock();
+    }
+  }
+});
+
+// NoSleep.js初期化（ページ読み込み時）
+document.addEventListener("DOMContentLoaded", () => {
+  initNoSleep();
+});
