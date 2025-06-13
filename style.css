@@ -30,14 +30,53 @@ body {
   background: rgba(255, 255, 255, 0.95);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 0.75rem;
 }
 
 .header h1 {
   font-size: 2.5rem;
   font-weight: 700;
   color: #2d3748;
-  margin-bottom: 0.75rem;
   letter-spacing: -0.025em;
+  margin: 0;
+}
+
+.help-btn {
+  position: absolute;
+  right: 0;
+  background: none;
+  border: 2px solid #e2e8f0;
+  color: #64748b;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.help-btn:hover {
+  background: #f8fafc;
+  border-color: #667eea;
+  color: #667eea;
+  transform: scale(1.1);
+}
+
+.help-btn.active {
+  background: #667eea;
+  border-color: #667eea;
+  color: white;
 }
 
 .header p {
@@ -473,5 +512,201 @@ body {
   .pattern-block {
     padding: 0.7rem 1.1rem 0.7rem 1.1rem;
     max-width: 100vw;
+  }
+}
+
+/* === ヘルプモーダル機能 === */
+
+/* ヘルプモーダル */
+.help-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(4px);
+}
+
+.help-modal.show {
+  opacity: 1;
+}
+
+.help-modal-content {
+  background: white;
+  border-radius: 16px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  transform: scale(0.95) translateY(20px);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.help-modal.show .help-modal-content {
+  transform: scale(1) translateY(0);
+}
+
+.help-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid #e2e8f0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.help-modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.help-modal-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+}
+
+.help-modal-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.help-modal-body {
+  padding: 1.5rem 2rem 2rem;
+  overflow-y: auto;
+  max-height: calc(80vh - 80px);
+}
+
+.help-section {
+  margin-bottom: 2rem;
+}
+
+.help-section:last-child {
+  margin-bottom: 0;
+}
+
+.help-section h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #2d3748;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.help-section p {
+  margin: 0 0 1rem 0;
+  color: #4a5568;
+  line-height: 1.6;
+}
+
+.help-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  border-left: 3px solid #667eea;
+}
+
+.help-item:last-child {
+  margin-bottom: 0;
+}
+
+.help-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  background: #667eea;
+  color: white;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.help-text {
+  flex: 1;
+  color: #2d3748;
+  line-height: 1.5;
+}
+
+.help-text strong {
+  color: #1a202c;
+  font-weight: 600;
+}
+
+/* モバイル対応 */
+@media (max-width: 768px) {
+  .header-content {
+    padding: 0 1rem;
+  }
+
+  .help-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.875rem;
+  }
+
+  .help-modal-content {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .help-modal-header {
+    padding: 1rem 1.5rem;
+  }
+
+  .help-modal-header h3 {
+    font-size: 1.125rem;
+  }
+
+  .help-modal-body {
+    padding: 1rem 1.5rem 1.5rem;
+    max-height: calc(90vh - 70px);
+  }
+
+  .help-section h4 {
+    font-size: 1rem;
+  }
+
+  .help-item {
+    padding: 0.625rem;
+    gap: 0.75rem;
+  }
+
+  .help-icon {
+    min-width: 1.75rem;
+    height: 1.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .help-text {
+    font-size: 0.875rem;
   }
 }

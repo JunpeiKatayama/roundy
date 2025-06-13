@@ -8,6 +8,9 @@ let wakeLock = null;
 let noSleep = null;
 let isWakeLockActive = false;
 
+// ヘルプ機能関連の変数
+let isHelpModalVisible = false;
+
 // 英語→日本語編み方対応表（かぎ針編み＋棒針編み）
 const STITCH_TRANSLATIONS = {
   // === かぎ針編み（Crochet） ===
@@ -349,6 +352,20 @@ document.addEventListener("DOMContentLoaded", () => {
   // Wake Lockボタンのイベントリスナー
   const wakeLockBtn = document.getElementById("wakeLockBtn");
   wakeLockBtn.addEventListener("click", toggleWakeLock);
+
+  // ヘルプボタンのイベントリスナー
+  const helpBtn = document.getElementById("helpBtn");
+  helpBtn.addEventListener("click", toggleHelpModal);
+
+  // ヘルプモーダルのイベントリスナー
+  const helpModal = document.getElementById("helpModal");
+  const helpModalClose = document.getElementById("helpModalClose");
+
+  helpModal.addEventListener("click", handleHelpModalOutsideClick);
+  helpModalClose.addEventListener("click", hideHelpModal);
+
+  // NoSleep.js初期化（ページ読み込み時）
+  initNoSleep();
 });
 
 // PDFアップロード処理
@@ -939,7 +956,95 @@ document.addEventListener("visibilitychange", async () => {
   }
 });
 
-// NoSleep.js初期化（ページ読み込み時）
-document.addEventListener("DOMContentLoaded", () => {
-  initNoSleep();
-});
+// === ヘルプモーダル機能 ===
+
+// ヘルプモーダルを表示/非表示する関数
+function toggleHelpModal() {
+  const helpModal = document.getElementById("helpModal");
+
+  if (isHelpModalVisible) {
+    hideHelpModal();
+  } else {
+    showHelpModal();
+  }
+}
+
+// ヘルプモーダルを表示
+function showHelpModal() {
+  const helpModal = document.getElementById("helpModal");
+  helpModal.style.display = "flex";
+
+  // アニメーション用の遅延
+  requestAnimationFrame(() => {
+    helpModal.classList.add("show");
+  });
+
+  isHelpModalVisible = true;
+
+  // ESCキーで閉じる
+  document.addEventListener("keydown", handleHelpModalEscKey);
+}
+
+// ヘルプモーダルを非表示
+function hideHelpModal() {
+  const helpModal = document.getElementById("helpModal");
+  helpModal.classList.remove("show");
+
+  // アニメーション完了後に非表示
+  setTimeout(() => {
+    helpModal.style.display = "none";
+  }, 300);
+
+  isHelpModalVisible = false;
+
+  // ESCキーイベントリスナーを削除
+  document.removeEventListener("keydown", handleHelpModalEscKey);
+}
+
+// ESCキーでモーダルを閉じる
+function handleHelpModalEscKey(event) {
+  if (event.key === "Escape") {
+    hideHelpModal();
+  }
+}
+
+// モーダル外クリックで閉じる処理
+function handleHelpModalOutsideClick(event) {
+  const helpModal = document.getElementById("helpModal");
+  const helpModalContent = helpModal.querySelector(".help-modal-content");
+
+  if (event.target === helpModal && !helpModalContent.contains(event.target)) {
+    hideHelpModal();
+  }
+}
+
+// ヘルプモード通知を表示
+function showHelpNotification(message) {
+  // 既存の通知を削除
+  const existingNotification = document.querySelector(".help-notification");
+  if (existingNotification) {
+    existingNotification.remove();
+  }
+
+  // 新しい通知を作成
+  const notification = document.createElement("div");
+  notification.className = "help-notification";
+  notification.textContent = message;
+
+  document.body.appendChild(notification);
+
+  // アニメーション表示
+  requestAnimationFrame(() => {
+    notification.classList.add("show");
+  });
+
+  // 3秒後に非表示
+  setTimeout(() => {
+    notification.classList.remove("show");
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.remove();
+      }
+    }, 300);
+  }, 3000);
+}

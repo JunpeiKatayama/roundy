@@ -19,7 +19,12 @@
     <div class="app-container">
       <!-- ヘッダー -->
       <header class="header">
-        <h1>🧶 Roundy</h1>
+        <div class="header-content">
+          <h1>🧶 Roundy</h1>
+          <button class="help-btn" id="helpBtn" title="使い方ガイド">
+            <i class="fas fa-question"></i>
+          </button>
+        </div>
         <p>編み図PDFをアップロードして、ラウンドごとに表示</p>
       </header>
 
@@ -123,6 +128,90 @@
           </div>
         </section>
       </main>
+    </div>
+
+    <!-- 操作ガイドモーダル -->
+    <div class="help-modal" id="helpModal" style="display: none">
+      <div class="help-modal-content">
+        <div class="help-modal-header">
+          <h3>🧶 Roundy 操作ガイド</h3>
+          <button class="help-modal-close" id="helpModalClose">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="help-modal-body">
+          <div class="help-section">
+            <h4>📄 PDFアップロード</h4>
+            <p>
+              「PDFファイルを選択」ボタンをクリックして、アメリカ式編み図のPDFをアップロードします。
+            </p>
+          </div>
+
+          <div class="help-section">
+            <h4>🎯 パターン表示エリア</h4>
+            <div class="help-item">
+              <span class="help-icon">📊</span>
+              <div class="help-text">
+                <strong>進捗表示</strong><br />
+                現在のラウンド番号と全体の進捗率を表示
+              </div>
+            </div>
+            <div class="help-item">
+              <span class="help-icon"><i class="fas fa-undo"></i></span>
+              <div class="help-text">
+                <strong>リセット</strong><br />
+                最初のラウンドに戻ります
+              </div>
+            </div>
+            <div class="help-item">
+              <span class="help-icon"
+                ><i class="fas fa-moon"></i> / <i class="fas fa-sun"></i
+              ></span>
+              <div class="help-text">
+                <strong>スリープ防止</strong><br />
+                編み物中にスマホの画面がスリープしないよう設定（月→太陽でON）
+              </div>
+            </div>
+            <div class="help-item">
+              <span class="help-icon"><i class="fas fa-copy"></i></span>
+              <div class="help-text">
+                <strong>コピー</strong><br />
+                現在のパターンを英語と日本語でクリップボードにコピー
+              </div>
+            </div>
+          </div>
+
+          <div class="help-section">
+            <h4>🔄 ナビゲーション</h4>
+            <div class="help-item">
+              <span class="help-icon">← 前へ</span>
+              <div class="help-text">前のラウンドに戻る</div>
+            </div>
+            <div class="help-item">
+              <span class="help-icon">次へ →</span>
+              <div class="help-text">次のラウンドに進む</div>
+            </div>
+            <div class="help-item">
+              <span class="help-icon">👆 スワイプ</span>
+              <div class="help-text">
+                スマホでは左右スワイプでページ送り可能
+              </div>
+            </div>
+          </div>
+
+          <div class="help-section">
+            <h4>⌨️ キーボードショートカット</h4>
+            <div class="help-item">
+              <span class="help-icon">←→</span>
+              <div class="help-text">矢印キーで前後のラウンドに移動</div>
+            </div>
+            <div class="help-item">
+              <span class="help-icon">Home</span>
+              <div class="help-text">最初のラウンドに戻る</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script src="script.js"></script>
