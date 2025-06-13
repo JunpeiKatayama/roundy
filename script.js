@@ -11,201 +11,26 @@ let isWakeLockActive = false;
 // ヘルプ機能関連の変数
 let isHelpModalVisible = false;
 
-// 英語→日本語編み方対応表（かぎ針編み＋棒針編み）
-const STITCH_TRANSLATIONS = {
-  // === かぎ針編み（Crochet） ===
-  // 基本的な編み方
+// 翻訳辞書を取得（外部ファイルまたはフォールバック）
+const STITCH_TRANSLATIONS = window.KNITTING_DICTIONARY || {
+  // フォールバック辞書（外部ファイルが読み込めない場合用）
+  // 基本的な用語のみ
+  k: "表編み",
+  knit: "表編み",
+  p: "裏編み",
+  purl: "裏編み",
   sc: "細編み",
-  "single crochet": "細編み",
-  hdc: "中長編み",
-  "half double crochet": "中長編み",
   dc: "長編み",
-  "double crochet": "長編み",
-  tr: "長々編み",
-  "treble crochet": "長々編み",
-  dtr: "3つ巻き長編み",
-  "double treble crochet": "3つ巻き長編み",
-
-  // チェーンとスリップステッチ
   ch: "鎖編み",
-  chain: "鎖編み",
   "sl st": "引き抜き編み",
-  "slip stitch": "引き抜き編み",
-  ss: "引き抜き編み",
-
-  // かぎ針の増し目・減らし目
-  sc2tog: "細編み2目一度",
-  dc2tog: "長編み2目一度",
-  hdc2tog: "中長編み2目一度",
-  tr2tog: "長々編み2目一度",
-
-  // 特殊な編み方
-  fpdc: "表引き上げ長編み",
-  "front post double crochet": "表引き上げ長編み",
-  bpdc: "裏引き上げ長編み",
-  "back post double crochet": "裏引き上げ長編み",
-  fptr: "表引き上げ長々編み",
-  "front post treble crochet": "表引き上げ長々編み",
-  bptr: "裏引き上げ長々編み",
-  "back post treble crochet": "裏引き上げ長々編み",
-
-  // シェル・クラスター
-  shell: "シェル編み",
-  cluster: "クラスター編み",
-  picot: "ピコット",
-  popcorn: "ポップコーン編み",
-  bobble: "ボッブル編み",
-
-  // === 棒針編み（Knitting） ===
-  // 基本的な編み方
-  k: "表目",
-  knit: "表目",
-  p: "裏目",
-  purl: "裏目",
-  "k tbl": "表目のねじり編み",
-  "knit through back loop": "表目のねじり編み",
-  "p tbl": "裏目のねじり編み",
-  "purl through back loop": "裏目のねじり編み",
-
-  // 棒針の減らし目
-  k2tog: "左上2目一度",
-  "knit 2 together": "左上2目一度",
-  p2tog: "裏目で左上2目一度",
-  "purl 2 together": "裏目で左上2目一度",
-  ssk: "右上2目一度",
-  "slip, slip, knit": "右上2目一度",
-  ssp: "裏側で右上2目一度",
-  "slip, slip, purl": "裏側で右上2目一度",
-  cdd: "中上3目一度",
-  "centered double decrease": "中上3目一度",
-
-  // 棒針の増し目
-  m1: "増し目",
-  "make one": "増し目",
-  m1l: "左上の増し目",
-  "make one left": "左上の増し目",
-  m1r: "右上の増し目",
-  "make one right": "右上の増し目",
-  kfb: "表目の前後で編む増し目",
-  "knit front and back": "表目の前後で編む増し目",
-  pfb: "裏目の前後で編む増し目",
-  "purl front and back": "裏目の前後で編む増し目",
-
-  // 棒針の特殊技法
-  sl: "すべり目",
-  slip: "すべり目",
-  psso: "すべり目をかぶせる",
-  "pass slipped stitch over": "すべり目をかぶせる",
-  skp: "すべり目・表目・かぶせ目",
-  "slip, knit, pass over": "すべり目・表目・かぶせ目",
-  tbl: "ねじり目",
-  "through back loop": "ねじり目",
-  ds: "DS（ダブルステッチ）",
-  "double stitch": "DS（ダブルステッチ）",
-
-  // 作り目・伏せ止め
-  co: "作り目",
-  "cast on": "作り目",
-  bo: "伏せ止め",
-  "bind off": "伏せ止め",
-  ltco: "長い尾の作り目",
-  "long-tail cast on": "長い尾の作り目",
-  "estonian co": "エストニア式作り目",
-  "estonian cast on": "エストニア式作り目",
-  "provisional co": "仮の作り目",
-  "provisional cast on": "仮の作り目",
-
-  // 編み方・模様
-  "garter st": "ガーター編み",
-  "garter stitch": "ガーター編み",
-  stockinette: "メリヤス編み",
-  "stockinette stitch": "メリヤス編み",
-  "seed stitch": "鹿の子編み",
-  ribbing: "ゴム編み",
-  cable: "交差編み・縄編み",
-  "drop st": "落とし目",
-  "drop stitch": "落とし目",
-
-  // 方向・状態
-  rs: "表側",
-  "right side": "表側",
-  ws: "裏側",
-  "wrong side": "裏側",
-  "work even": "増減なしで編む",
-  cont: "続けて編む",
-  continue: "続けて編む",
-  patt: "模様・模様通りに編む",
-  pattern: "模様・模様通りに編む",
-
-  // マーカー
-  pm: "マーカーを置く",
-  "place marker": "マーカーを置く",
-  sm: "マーカーを移動させる",
-  "slip marker": "マーカーを移動させる",
-  slm: "マーカーを滑らせる",
-  rm: "マーカーを外す",
-  "remove marker": "マーカーを外す",
-
-  // === 共通用語 ===
-  // 増し目・減らし目（共通）
+  yo: "掛け目",
   inc: "増し目",
-  increase: "増し目",
   dec: "減らし目",
-  decrease: "減らし目",
-
-  // 方向・場所（共通）
   rnd: "ラウンド",
   round: "ラウンド",
   row: "段",
   st: "目",
-  stitch: "目",
   sts: "目",
-  stitches: "目",
-  sp: "間",
-  space: "間",
-  "ch-sp": "鎖の間",
-  "ch sp": "鎖の間",
-  blo: "裏山のみ",
-  "back loop only": "裏山のみ",
-  flo: "表山のみ",
-  "front loop only": "表山のみ",
-
-  // 繰り返し・その他（共通）
-  rep: "繰り返し",
-  repeat: "繰り返し",
-  around: "周りに",
-  join: "つなぐ",
-  turn: "返す",
-  "fasten off": "糸を切る",
-  "finish off": "糸を切る",
-  yo: "かけ目",
-  "yarn over": "かけ目",
-  sk: "飛ばす",
-  skip: "飛ばす",
-  next: "次の",
-  prev: "前の",
-  previous: "前の",
-  rem: "残り",
-  remaining: "残り",
-  beg: "始まり・最初",
-  beginning: "始まり・最初",
-  bor: "段の始まり（BOR）",
-  "beginning of round": "段の始まり（BOR）",
-  end: "終わり・最後",
-  total: "合計",
-  tog: "一度",
-  together: "一度",
-
-  // 数量
-  times: "回",
-  x: "×",
-
-  // 括弧・記号の説明
-  "()": "（）内を繰り返す",
-  "[]": "［］内を繰り返す",
-  "{}": "｛｝内を繰り返す",
-  "*": "※印まで繰り返す",
-  "**": "※※印まで繰り返す",
 };
 
 // パターンテキストを日本語に翻訳
@@ -214,10 +39,13 @@ function translatePatternToJapanese(englishText) {
 
   // 先に特定の大文字パターンを処理（K1, P1, K2tog等）
   // 棒針編みの特殊パターン（数字付きの複合パターンを先に処理）
-  translatedText = translatedText.replace(/\bK(\d+)tog\b/gi, "右上$1目一度");
-  translatedText = translatedText.replace(/\bP(\d+)tog\b/gi, "裏目で$1目一度");
-  translatedText = translatedText.replace(/\bSSK\b/gi, "左上2目一度");
-  translatedText = translatedText.replace(/\bSSP\b/gi, "裏側で左上2目一度");
+  translatedText = translatedText.replace(/\bK(\d+)tog\b/gi, "左上$1目一度");
+  translatedText = translatedText.replace(
+    /\bP(\d+)tog\b/gi,
+    "裏編みで$1目一度"
+  );
+  translatedText = translatedText.replace(/\bSSK\b/gi, "右上2目一度");
+  translatedText = translatedText.replace(/\bSSP\b/gi, "裏側で右上2目一度");
   translatedText = translatedText.replace(/\bM(\d+)L\b/gi, "左上の増し目$1");
   translatedText = translatedText.replace(/\bM(\d+)R\b/gi, "右上の増し目$1");
   translatedText = translatedText.replace(/\bM(\d+)\b/gi, "増し目$1");
@@ -249,23 +77,23 @@ function translatePatternToJapanese(englishText) {
   translatedText = translatedText.replace(/(\d+)\s*鎖編み/g, "鎖編み$1目");
 
   // 数字 + 編み方のパターンを調整（棒針編み）
-  translatedText = translatedText.replace(/(\d+)\s*表目/g, "表目$1目");
-  translatedText = translatedText.replace(/(\d+)\s*裏目/g, "裏目$1目");
+  translatedText = translatedText.replace(/(\d+)\s*表編み/g, "表編み$1目");
+  translatedText = translatedText.replace(/(\d+)\s*裏編み/g, "裏編み$1目");
   translatedText = translatedText.replace(/(\d+)\s*増し目/g, "増し目$1回");
   translatedText = translatedText.replace(/(\d+)\s*作り目/g, "作り目$1目");
 
   // 棒針編み特有のパターン調整
-  translatedText = translatedText.replace(/表目(\d+)目目/g, "表目$1目"); // 重複を避ける
-  translatedText = translatedText.replace(/裏目(\d+)目目/g, "裏目$1目"); // 重複を避ける
+  translatedText = translatedText.replace(/表編み(\d+)目目/g, "表編み$1目"); // 重複を避ける
+  translatedText = translatedText.replace(/裏編み(\d+)目目/g, "裏編み$1目"); // 重複を避ける
 
   // K3, P2 などの連続パターンを調整
   translatedText = translatedText.replace(
-    /表目(\d+)目,\s*裏目(\d+)目/g,
-    "表目$1目、裏目$2目"
+    /表編み(\d+)目,\s*裏編み(\d+)目/g,
+    "表編み$1目、裏編み$2目"
   );
   translatedText = translatedText.replace(
-    /表目(\d+)目\s*裏目(\d+)目/g,
-    "表目$1目裏目$2目"
+    /表編み(\d+)目\s*裏編み(\d+)目/g,
+    "表編み$1目裏編み$2目"
   );
 
   // ケーブル編みパターンの調整
@@ -276,22 +104,22 @@ function translatePatternToJapanese(englishText) {
 
   // ゴム編みパターンの調整
   translatedText = translatedText.replace(
-    /\b表目(\d+)\s*裏目(\d+)\b/gi,
-    "表目$1目裏目$2目のゴム編み"
+    /\b表編み(\d+)\s*裏編み(\d+)\b/gi,
+    "表編み$1目裏編み$2目のゴム編み"
   );
   translatedText = translatedText.replace(
-    /\b裏目(\d+)\s*表目(\d+)\b/gi,
-    "裏目$1目表目$2目のゴム編み"
+    /\b裏編み(\d+)\s*表編み(\d+)\b/gi,
+    "裏編み$1目表編み$2目のゴム編み"
   );
 
   // まだ翻訳されていない大文字パターン（K1P1など）
   translatedText = translatedText.replace(
     /\bK(\d+)P(\d+)\b/gi,
-    "表目$1目裏目$2目のゴム編み"
+    "表編み$1目裏編み$2目のゴム編み"
   );
   translatedText = translatedText.replace(
     /\bP(\d+)K(\d+)\b/gi,
-    "裏目$1目表目$2目のゴム編み"
+    "裏編み$1目表編み$2目のゴム編み"
   );
 
   // 繰り返し記号の調整
@@ -332,6 +160,7 @@ const resetBtn = document.getElementById("resetBtn");
 const progressFill = document.getElementById("progressFill");
 const progressPercentage = document.getElementById("progressPercentage");
 const copyBtn = document.getElementById("copyBtn");
+const clearDataBtn = document.getElementById("clearDataBtn");
 
 // イベントリスナーの設定
 document.addEventListener("DOMContentLoaded", () => {
@@ -363,6 +192,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   helpModal.addEventListener("click", handleHelpModalOutsideClick);
   helpModalClose.addEventListener("click", hideHelpModal);
+
+  // 保存データ破棄ボタンのイベントリスナー
+  clearDataBtn.addEventListener("click", clearSavedData);
 
   // NoSleep.js初期化（ページ読み込み時）
   initNoSleep();
@@ -723,6 +555,40 @@ function loadSavedState() {
 // 保存された状態のクリア
 function clearSavedState() {
   localStorage.removeItem(STORAGE_KEY);
+}
+
+// 保存されたデータを確認ダイアログ付きで削除する関数
+function clearSavedData() {
+  try {
+    const savedState = localStorage.getItem(STORAGE_KEY);
+
+    if (!savedState) {
+      alert("削除する保存データはありません。");
+      return;
+    }
+
+    const state = JSON.parse(savedState);
+    const confirmMessage =
+      `保存されている進捗データを削除しますか？\n\n` +
+      `進捗: ${state.currentBlockIndex + 1} / ${state.totalBlocks}\n` +
+      `最終更新: ${new Date(state.lastUpdated).toLocaleString()}\n\n` +
+      `この操作は取り消すことができません。`;
+
+    if (confirm(confirmMessage)) {
+      clearSavedState();
+      alert("保存された進捗データを削除しました。");
+
+      // 現在パターン表示中の場合はアップロード画面に戻る
+      if (patternSection.style.display !== "none") {
+        patternBlocks = [];
+        currentBlockIndex = 0;
+        showUploadSection();
+      }
+    }
+  } catch (error) {
+    console.error("データ削除エラー:", error);
+    alert("データの削除中にエラーが発生しました。");
+  }
 }
 
 // クリップボードにコピー
