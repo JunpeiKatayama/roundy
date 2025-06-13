@@ -23,7 +23,12 @@ const STITCH_TRANSLATIONS = window.KNITTING_DICTIONARY || {
   dc: "長編み",
   ch: "鎖編み",
   "sl st": "引き抜き編み",
+  sl: "すべり目", // 棒針編みの場合
+  slip: "すべり目", // 棒針編みの場合
+  bo: "伏せ目",
+  "bind off": "伏せ目",
   yo: "掛け目",
+  "yarn over": "掛け目",
   inc: "増し目",
   dec: "減らし目",
   rnd: "ラウンド",
@@ -42,7 +47,7 @@ function translatePatternToJapanese(englishText) {
   translatedText = translatedText.replace(/\bK(\d+)tog\b/gi, "左上$1目一度");
   translatedText = translatedText.replace(
     /\bP(\d+)tog\b/gi,
-    "裏編みで$1目一度"
+    "裏編みで左上$1目一度"
   );
   translatedText = translatedText.replace(/\bSSK\b/gi, "右上2目一度");
   translatedText = translatedText.replace(/\bSSP\b/gi, "裏側で右上2目一度");
@@ -51,12 +56,12 @@ function translatePatternToJapanese(englishText) {
   translatedText = translatedText.replace(/\bM(\d+)\b/gi, "増し目$1");
 
   // 棒針編みの基本パターン（単独の文字+数字）
-  translatedText = translatedText.replace(/\bK(\d+)\b/gi, "表目$1");
-  translatedText = translatedText.replace(/\bP(\d+)\b/gi, "裏目$1");
+  translatedText = translatedText.replace(/\bK(\d+)\b/gi, "表編み$1");
+  translatedText = translatedText.replace(/\bP(\d+)\b/gi, "裏編み$1");
 
   // 単独の大文字も確実に翻訳
-  translatedText = translatedText.replace(/\bK\b/gi, "表目");
-  translatedText = translatedText.replace(/\bP\b/gi, "裏目");
+  translatedText = translatedText.replace(/\bK\b/gi, "表編み");
+  translatedText = translatedText.replace(/\bP\b/gi, "裏編み");
 
   // 対応表を使って置換
   Object.entries(STITCH_TRANSLATIONS).forEach(([english, japanese]) => {
