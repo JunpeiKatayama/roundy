@@ -84,10 +84,10 @@ const KNITTING_DICTIONARY = {
   // 棒針の増し目
   m1: "増し目",
   "make one": "増し目",
-  m1l: "左上の増し目",
-  "make one left": "左上の増し目",
-  m1r: "右上の増し目",
-  "make one right": "右上の増し目",
+  m1l: "左ねじり増し目",
+  "make one left": "左ねじり増し目",
+  m1r: "右ねじり増し目",
+  "make one right": "右ねじり増し目",
   kfb: "表編みの前後で編む増し目",
   "knit front and back": "表編みの前後で編む増し目",
   pfb: "裏編みの前後で編む増し目",
@@ -211,9 +211,4 @@ const KNITTING_DICTIONARY = {
   "**": "※※印まで繰り返す",
 };
 
-// 他のファイルから使用できるようにエクスポート
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = KNITTING_DICTIONARY;
-} else if (typeof window !== "undefined") {
-  window.KNITTING_DICTIONARY = KNITTING_DICTIONARY;
-}
+export default KNITTING_DICTIONARY;

@@ -1,0 +1,11 @@
+{
+  "name": "Roundy 編み図リーダー",
+  "short_name": "Roundy",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#e9f0ee",
+  "theme_color": "#e9f0ee",
+  "lang": "ja",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
