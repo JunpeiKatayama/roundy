@@ -1,5 +1,6 @@
-// 保存済みの作品をオフラインでも開けるようにする。常にネットワークを優先し、更新の取り残しを防ぐ
-const CACHE = "roundy-v2";
+// 保存済みの作品をオフラインでも開けるようにする。
+// GitHub Pages は10分間キャッシュされるので、毎回サーバーへ更新を確認して取り残しを防ぐ
+const CACHE = "roundy-v3";
 const ASSETS = [
   "./", "index.html", "style.css", "icon.svg", "manifest.webmanifest", "knitting-dictionary.js",
   "js/app.js", "js/parser.js", "js/pdf-lines.js", "js/pdf-url.js", "js/storage.js", "js/translator.js",
@@ -21,7 +22,7 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   if (request.method !== "GET" || new URL(request.url).origin !== location.origin) return;
   event.respondWith(
-    fetch(request)
+    fetch(request.url, { cache: "no-cache" })
       .then((response) => {
         if (response.ok) {
           const copy = response.clone();

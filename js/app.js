@@ -730,6 +730,17 @@ applySettings();
 migrateLegacy();
 render();
 
-if ("serviceWorker" in navigator && location.protocol === "https:") {
-  navigator.serviceWorker.register("sw.js").catch(() => {});
+// 新しい版が入ったら読み込み直す。進み具合は保存済みで、画面も URL から復元できる
+function watchForUpdates() {
+  const replacing = Boolean(navigator.serviceWorker.controller);
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (replacing) location.reload();
+  }, { once: true });
+  navigator.serviceWorker.register("sw.js").then((registration) => {
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") registration.update().catch(() => {});
+    });
+  }).catch(() => {});
 }
+
+if ("serviceWorker" in navigator && location.protocol === "https:") watchForUpdates();
