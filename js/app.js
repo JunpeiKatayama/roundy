@@ -534,7 +534,71 @@ function renderReader(pattern) {
     return "wakeLock" in navigator ? button : null;
   };
 
+  // 描き直すと要素が消えてドラッグが切れるので、移動は指を離したときに確定する
+  const seekBar = () => {
+    const ratio = progressRatio(pattern, steps) + (pattern.done ? 0 : 1 / steps.length);
+    const gauge = stitchRow(ratio);
+    const bubble = h("div", { class: "seek-bubble", hidden: true });
+    let target = null;
+
+    const indexAt = (event) => {
+      const rect = gauge.getBoundingClientRect();
+      const position = Math.ceil(((event.clientX - rect.left) / rect.width) * steps.length) - 1;
+      return Math.max(0, Math.min(steps.length - 1, position));
+    };
+    const preview = (event) => {
+      target = indexAt(event);
+      const step = steps[target];
+      gauge.style.setProperty("--p", `${((target + 1) / steps.length) * 100}%`);
+      bubble.textContent = `${step.section ? `${step.section} ` : ""}${labelToJapanese(step) || "説明"}（${target + 1} / ${steps.length}）`;
+      bubble.hidden = false;
+      const half = bubble.offsetWidth / 2;
+      const rect = gauge.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      bubble.style.left = `${Math.max(half, Math.min(rect.width - half, x))}px`;
+    };
+    const cancel = () => {
+      target = null;
+      bubble.hidden = true;
+      gauge.style.setProperty("--p", `${ratio * 100}%`);
+    };
+
+    return h(
+      "div",
+      {
+        class: "seek",
+        role: "slider",
+        tabIndex: 0,
+        "aria-label": "段を移動",
+        "aria-valuemin": 1,
+        "aria-valuemax": steps.length,
+        "aria-valuenow": pattern.index + 1,
+        "aria-valuetext": `${pattern.index + 1} / ${steps.length}`,
+        onPointerdown: (event) => {
+          if (event.button !== 0) return;
+          event.currentTarget.setPointerCapture(event.pointerId);
+          preview(event);
+        },
+        onPointermove: (event) => {
+          if (target !== null) preview(event);
+        },
+        onPointerup: () => {
+          if (target !== null) go(target);
+        },
+        onPointercancel: cancel,
+        onKeydown: (event) => {
+          if (event.key !== "Home" && event.key !== "End") return;
+          event.preventDefault();
+          go(event.key === "Home" ? 0 : steps.length - 1);
+        },
+      },
+      gauge,
+      bubble
+    );
+  };
+
   const draw = () => {
+    const keepFocus = document.activeElement?.classList.contains("seek");
     const step = steps[pattern.index];
     const nextStep = steps[pattern.index + 1];
     const isLast = pattern.index === steps.length - 1;
@@ -595,7 +659,7 @@ function renderReader(pattern) {
           h("p", { class: "reader-position" }, `${pattern.index + 1} / ${steps.length}`),
           iconButton("menu", "表示とメニュー", () => openSettings(pattern, steps, go))
         ),
-        stitchRow(progressRatio(pattern, steps) + (pattern.done ? 0 : 1 / steps.length)),
+        seekBar(),
         h("main", { class: "reader-body" }, body),
         h(
           "nav",
@@ -605,6 +669,7 @@ function renderReader(pattern) {
         )
       )
     );
+    if (keepFocus) app.querySelector(".seek").focus();
   };
 
   const onKey = (event) => {
@@ -619,7 +684,7 @@ function renderReader(pattern) {
 
   let touch = null;
   const onTouchStart = (e) => {
-    touch = e.target.closest("button, a, textarea") ? null : { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    touch = e.target.closest("button, a, textarea, .seek") ? null : { x: e.touches[0].clientX, y: e.touches[0].clientY };
   };
   const onTouchEnd = (e) => {
     if (!touch) return;

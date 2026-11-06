@@ -426,8 +426,33 @@ a {
   padding: 4px 8px;
 }
 
-.reader > .stitches {
-  margin: 0 16px;
+/* ゲージは細いので、上下に余白をとって指でも掴めるようにする */
+.seek {
+  position: relative;
+  z-index: 1;
+  margin: -8px 16px -12px;
+  padding: 15px 0;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.seek-bubble {
+  position: absolute;
+  top: calc(100% - 6px);
+  width: max-content;
+  max-width: 100%;
+  padding: 4px 10px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 700 0.92rem var(--latin);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  pointer-events: none;
 }
 
 .reader-title {
