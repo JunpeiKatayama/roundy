@@ -315,7 +315,7 @@ export function expandBlocks(blocks) {
 
 function roundName(block) {
   const word = block.label.match(/^[A-Za-z]+/)?.[0];
-  if (!word) return block.unit === "row" ? "段" : "周";
+  if (!word) return "段";
   return word.replace(/s$/, "");
 }
 

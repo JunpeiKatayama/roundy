@@ -157,8 +157,8 @@ const KNITTING_DICTIONARY = {
   decrease: "減らし目",
 
   // 方向・場所（共通）
-  rnd: "ラウンド",
-  round: "ラウンド",
+  rnd: "段",
+  round: "段",
   row: "段",
   st: "目",
   stitch: "目",

@@ -1,8 +1,8 @@
 // 保存済みの作品をオフラインでも開けるようにする。常にネットワークを優先し、更新の取り残しを防ぐ
-const CACHE = "roundy-v1";
+const CACHE = "roundy-v2";
 const ASSETS = [
   "./", "index.html", "style.css", "icon.svg", "manifest.webmanifest", "knitting-dictionary.js",
-  "js/app.js", "js/parser.js", "js/pdf-lines.js", "js/storage.js", "js/translator.js",
+  "js/app.js", "js/parser.js", "js/pdf-lines.js", "js/pdf-url.js", "js/storage.js", "js/translator.js",
 ];
 
 self.addEventListener("install", (event) => {

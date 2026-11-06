@@ -42,7 +42,7 @@ const CLAUSES = [
   [new RegExp(`^(?:join\\s+(?:with\\s+)?)?(?:sl\\s*st|slip\\s+stitch)\\s+(?:in|into|to)\\s+(?:the\\s+)?(?:top\\s+of\\s+)?(?:the\\s+)?(?:first|1st)\\s+${S}(?:\\s+to\\s+join)?$`, "i"), (_, s) => `最初の${name(s)}に引き抜いてつなぐ`],
   [/^rep(?:eat)?\s+from\s*\*\s*(around|across|to end(?: of (?:row|rnd|round))?)?$/i, (_, w) => `*から${w ? (w.toLowerCase() === "around" ? "1周" : "端まで") : ""}繰り返す`],
   [/^rep(?:eat)?\s+(?:from\s+)?\*\s*to\s*\*$/i, () => "*から*までを繰り返す"],
-  [/^(?:same as|rep(?:eat)?)\s+(rnd|round|row)\s+(\d+)$/i, (_, u, n) => `${/row/i.test(u) ? `${n}段目` : `${n}周目`}と同様に編む`],
+  [/^(?:same as|rep(?:eat)?)\s+(?:rnd|round|row)\s+(\d+)$/i, (_, n) => `${n}段目と同様に編む`],
   [new RegExp(`^(\\d+)?\\s*${S}\\s+${INTO}\\s+(?:next\\s+)?ch[-\\s]sp$`, "i"), (_, n, s) => `鎖の間に${name(s)}${times(n)}`],
   [new RegExp(`^${S}\\s+${INTO}\\s+each\\s+${S}\\s+to\\s+next\\s+ch[-\\s]sp$`, "i"), (_, s) => `次の鎖の間まで${name(s)}`],
   [new RegExp(`^(?:skip|sk)\\s+(?:the\\s+)?first\\s+${ST}$`, "i"), () => "最初の目を飛ばす"],
@@ -152,5 +152,5 @@ export function labelToJapanese(step) {
   const tag = step.label.match(/\(([^)]+)\)$/)?.[1];
   const suffix = tag ? `（${translateClause(tag)}）` : "";
   if (step.number === null) return step.label;
-  return `${step.unit === "row" ? `${step.number}段目` : `${step.number}周目`}${suffix}`;
+  return `${step.number}段目${suffix}`;
 }

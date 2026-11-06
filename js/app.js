@@ -1,4 +1,5 @@
 import { pagesToLines } from "./pdf-lines.js";
+import { fileNameFromUrl, parsePdfUrl } from "./pdf-url.js";
 import { expandBlocks, mergeWithPrevious, parseLines, splitBlock } from "./parser.js";
 import { labelToJapanese, translatePattern } from "./translator.js";
 import { loadLibrary, loadSettings, saveLibrary, saveSettings, takeLegacyState } from "./storage.js";
@@ -7,6 +8,7 @@ const PDFJS_URL = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.mi
 const PDFJS_WORKER_URL = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 const MIN_TEXT_LENGTH = 40;
 const SWIPE_DISTANCE = 60;
+const FETCH_TIMEOUT = 30000;
 const FONT_STEPS = [0.9, 1, 1.15, 1.3, 1.5, 1.75];
 
 const app = document.getElementById("app");
@@ -148,6 +150,19 @@ function failureMessage(error) {
   return "このファイルはPDFとして読み込めませんでした。別のファイルを選んでください。";
 }
 
+async function fetchPdf(url) {
+  let response;
+  try {
+    response = await fetch(url, { signal: AbortSignal.timeout(FETCH_TIMEOUT) });
+  } catch (error) {
+    if (error.name === "TimeoutError") throw new Error("PDFの取得に時間がかかりすぎたため中止しました。");
+    // CORS で拒否された場合も通信エラーと同じ形で届き、ブラウザからは区別できない
+    throw new Error("このURLからは直接読み込めませんでした。配布元が許可していないか、接続できない可能性があります。PDFをダウンロードしてから、上の枠で開いてください。");
+  }
+  if (!response.ok) throw new Error(`PDFを取得できませんでした（エラー ${response.status}）。URLを確認するか、PDFをダウンロードして開いてください。`);
+  return new File([await response.blob()], fileNameFromUrl(url), { type: "application/pdf" });
+}
+
 async function importFile(file, onState) {
   if (!file) return;
   if (file.type && file.type !== "application/pdf" && !/\.pdf$/i.test(file.name)) {
@@ -220,6 +235,50 @@ function renderLibrary() {
     importFile(e.dataTransfer.files[0], setBusy);
   });
 
+  const urlInput = h("input", {
+    type: "url",
+    class: "url-input",
+    id: "pdf-url",
+    placeholder: "https://example.com/pattern.pdf",
+    autocomplete: "off",
+    required: true,
+  });
+  const urlButton = h("button", { type: "submit", class: "btn" }, "開く");
+  const urlError = h("p", { class: "url-error", role: "alert", hidden: true });
+  const showUrlError = (message) => {
+    urlError.textContent = message;
+    urlError.hidden = false;
+  };
+  const urlForm = h(
+    "form",
+    {
+      class: "url-form",
+      noValidate: true,
+      onsubmit: async (event) => {
+        event.preventDefault();
+        urlError.hidden = true;
+        const url = parsePdfUrl(urlInput.value);
+        if (!url) {
+          showUrlError("https:// から始まるURLを入力してください。");
+          return;
+        }
+        urlButton.disabled = true;
+        setBusy(true);
+        try {
+          await importFile(await fetchPdf(url), setBusy);
+        } catch (error) {
+          showUrlError(error.message);
+        } finally {
+          setBusy(false);
+          urlButton.disabled = false;
+        }
+      },
+    },
+    h("label", { class: "url-label", htmlFor: "pdf-url" }, "URLから開く"),
+    h("div", { class: "url-row" }, urlInput, urlButton),
+    urlError
+  );
+
   const items = library.map((pattern) => {
     const steps = expandBlocks(pattern.blocks);
     const step = steps[pattern.index];
@@ -254,6 +313,7 @@ function renderLibrary() {
       h("h1", { class: "wordmark" }, "Roundy"),
       h("p", { class: "lead" }, "英語の編み図を、1段ずつ日本語つきで。"),
       drop,
+      urlForm,
       items.length ? h("section", {}, h("h2", { class: "list-title" }, "編んでいる作品"), h("ul", { class: "works" }, items)) : null
     )
   );
